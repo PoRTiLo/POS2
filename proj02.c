@@ -87,7 +87,7 @@ void *threadFunc(void *threadId) {
       threads[(intptr_t)threadId].ticket = localTic;
       randomWait((intptr_t)threadId);        /* Nahodne cekana v intervalu <0,0 s, 0,5 s> */
       await(threads[(intptr_t)threadId].ticket);  /* Vstup do KS */
-      printf("%d\t(%ld)\n", threads[(intptr_t)threadId].ticket, (intptr_t)threadId+1); /* fflush(stdout); */
+      printf("%d\t(%d)\n", threads[(intptr_t)threadId].ticket, (intptr_t)threadId+1); /* fflush(stdout); */
       advance();                             /* Vystup z KS */
       randomWait((intptr_t)threadId);        /* Nahodne cekani v intervalu <0,0 s, 0,5 s> */
    }

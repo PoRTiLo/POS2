@@ -42,13 +42,13 @@ int main(int argc, char *argv[]) {
    ticket = -1;                              /* cislo jiz predeleno listku */
    ticketAct = 0;                            /* aktualni listek ktery muze do KS */
    if(checkArg(argc, argv) == -1 ) {         /* Kontrola vstupnich argumentu */
-      return -1;                             /* Nastala chyba, koncim */
+      return(-1);                             /* Nastala chyba, koncim */
    }
 
    /* Tvorba vlaken */
    if( (threads = (struct Spthread*) malloc(sizeof(struct Spthread) * countThreads)) == NULL) { /* Dynamicka alokace pole vlaken*/
       printf("CHYBA: Nepovedla se dynamicka alokace pole sdruzujici informace o vlaknech.\n");
-      return -1;
+      return(-1);
    }
 
    for(i = 0; i < countThreads; i++) {       /* Vytvoreni vlaken */
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
       else if(result) {                      /* Nepovedlo se vytvorit vlakno, koncim */
          printf("CHYBA: Nepovedlo se vytvorit vlakno. Kod chyby: %d.\n", result);
          free(threads);                      /* uvolneni pameti */
-         return -1;
+         return(-1);
       }
    }
 
@@ -69,11 +69,11 @@ int main(int argc, char *argv[]) {
       if((result = pthread_join(threads[i].id, NULL)) != 0 ) {   /* cekani na dokonceni vlakna */
          printf("CHYBA: Nepovedlo se nasatvit cekani na konec tohoto vlakna. Kod chyby: %d.\n", result);
          free(threads);                      /* uvolneni pameti */
-         return -1;
+         return(-1);
       }
    }
    free(threads);                            /* uvolneni pameti */
-   return 0;
+   return(0);
 }
 
 
@@ -91,7 +91,7 @@ void *threadFunc(void *threadId) {
       advance();                             /* Vystup z KS */
       randomWait((intptr_t)threadId);        /* Nahodne cekani v intervalu <0,0 s, 0,5 s> */
    }
-   return (NULL);
+   return(NULL);
 }
 
 /**
@@ -102,7 +102,7 @@ int getticket(void) {
    pthread_mutex_lock(&var_mutex);           /* ziskani vyhradniho pristupu */
    ticket++;                                 /* operace se sdilenou promennou */
    pthread_mutex_unlock(&var_mutex);         /* uvolneni pristupu */
-   return ticket;
+   return(ticket);
 }
 
 /**
@@ -117,6 +117,7 @@ void await(int aenter) {
       }
       pthread_cond_wait(&cond, &var_mutex);  /* uspim se, cekam, na uvoleni KS */
    }
+   return;
 }
 
 /**
@@ -130,6 +131,7 @@ void advance(void) {
    if(pthread_cond_broadcast(&cond) != 0) {  /* poslu vsem ze jsem prosel KS, muzou vstoupit */
       printf("CHYBA: u Brodcastu.\n");
    }
+   return;
 }
 
 /**
@@ -153,7 +155,7 @@ int isNumber(char argv[]) {
          return -1;
       }
    }
-   return num;                               /* vysledne cislo */
+   return(num);                               /* vysledne cislo */
 }
 
 /**
@@ -169,7 +171,7 @@ int waitMoment(void) {
       /*printf("VAROVANI: Cekani se nezdarilo!\n");*/
       /*return -1;*/
    }
-   return 0;
+   return(0);
 }
 
 /**
@@ -187,7 +189,7 @@ int randomWait(int threadId) {
       /*printf("VAROVANI: Cekani se nezdarilo");*/
       /*return -1;*/
    }
-   return 0;
+   return(0);
 }
 
 /**
@@ -210,21 +212,21 @@ int checkArg(int argc, char *argv[]) {
  pouziti programu.\n\
 --------------------------------------------------\n \
 ");
-      return -1;
+      return(1);
    }
    else if(argc == 3) {
       if( (countThreads = isNumber(argv[1])) == -1) {  /* Neni cislo, ukoncim */
          printf("CHYBA: Pocet vlaken neni zadan jako cislo.\n");
-         return -1;
+         return(-1);
       }
       if( (countSynchr = isNumber(argv[2])) == -1) {  /* Neni cislo, ukoncim */
          printf("CHYBA: Pocet pruchodu kritickou sekci neni zadan jako cislo.\n");
-         return -1;
+         return(-1);
       }
    }
    else {                                    /* Chyba spatny pocet argumentu*/
       printf("CHYBA: Spatny pocet argumentu.\n");
-      return -1;
+      return(-1);
    }
    return 0;
 }

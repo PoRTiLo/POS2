@@ -12,7 +12,7 @@ SRC=proj02.c
 
 CFLAGS=-ansi -pedantic -Wall -Wextra -g -O
 CC=gcc
-all:  clean ${PROGRAM} 
+all:  ${PROGRAM} 
 
 ${PROGRAM}: 
 	$(CC) $(CFLAGS) $(SRC) -o $@ -lpthread -lrt
